@@ -28,8 +28,11 @@ destination based on who the visitor arrived as:
   credited. Rounds through the offer list using `pointer`.
 - **Agent referral** (`?agentId=...`) — treated as part of the rotator pool, and counted as attributed.
 - **No referral** — round-robin across a master pool and the individual offer pool, split by
-  `masterTrafficPercent` (default 70/30). Every click is also recorded against that promoter's link so
-  attribution survives the redirect.
+  `masterTrafficPercent` (default 70/30). Master placements are interleaved across every offer feed,
+  with the winner's own saved links substituted into the destination.
+
+Any incoming `ref` or `agentId` is appended to the final URL (unless it is already present), so
+attribution survives the redirect.
 - **Empty snapshot** — falls back to the Jobless Joe app rather than failing.
 
 The router refuses to spend anything it doesn't have to: the manifest caps it at zero HTTP calls, zero

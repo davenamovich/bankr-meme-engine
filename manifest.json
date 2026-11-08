@@ -1,0 +1,137 @@
+{
+  "slug": "bankr-meme-engine",
+  "title": "The Bankr Meme Engine",
+  "description": "Centralized promotional traffic rotator, dynamic daily auction with 11:50 AM Eastern cutoff, fair round-robin distribution, click analytics, and multi-channel syndication across Bankr apps and Telegram bots.",
+  "version": 78,
+  "visibility": "unlisted",
+  "tags": [
+    "rotator",
+    "marketing",
+    "traffic",
+    "auction",
+    "syndication"
+  ],
+  "permissions": [
+    "read:appdata",
+    "write:appdata",
+    "fetch:http",
+    "read:secrets",
+    "read:wallet",
+    "read:portfolio",
+    "read:chain",
+    "prepare:transaction"
+  ],
+  "scripts": [
+    "manageRotator",
+    "routeRotatorClick",
+    "syncDailySnapshot"
+  ],
+  "publicScripts": [
+    "routeRotatorClick"
+  ],
+  "publicScriptLimits": {
+    "routeRotatorClick": {
+      "maxHttpCalls": 0,
+      "maxChainReads": 0,
+      "maxExecMs": 3000,
+      "maxReturnBytes": 4096,
+      "perViewerRateLimit": {
+        "rpm": 20,
+        "rph": 300
+      },
+      "perAppRateLimit": {
+        "rph": 5000
+      }
+    }
+  },
+  "assets": [],
+  "publicDataKeys": [
+    "daily_offers",
+    "admin_phone_media"
+  ],
+  "secrets": [
+    {
+      "key": "PLUNDER_AND_RIFFLE_API_KEY",
+      "description": "Plunder & Riffle API key for live creative generation",
+      "scope": "author",
+      "required": false,
+      "allowedHosts": [
+        "bot.plunderandriffle.com",
+        "api.telegram.org"
+      ],
+      "dailyCapInvocations": 1000,
+      "publicScriptSafe": false
+    },
+    {
+      "key": "TELEGRAM_BOT_TOKEN",
+      "description": "Telegram bot token for broadcasting drops to the channel (rotate the old hard-coded one in @BotFather first)",
+      "scope": "author",
+      "required": false,
+      "allowedHosts": [
+        "api.telegram.org"
+      ],
+      "dailyCapInvocations": 1000,
+      "publicScriptSafe": false
+    },
+    {
+      "key": "ADMIN_KEY",
+      "description": "Optional. When set, admin actions also need this passphrase (entered once in the Central Admin tab)",
+      "scope": "author",
+      "required": false,
+      "allowedHosts": [],
+      "dailyCapInvocations": 1000,
+      "publicScriptSafe": false
+    }
+  ],
+  "schedule": [
+    {
+      "script": "syncDailySnapshot",
+      "cron": "*/5 * * * *",
+      "enabled": true
+    }
+  ],
+  "frontendIdentity": "owner",
+  "dataSchemas": {
+    "daily_offers": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "number"
+        },
+        "updatedAt": {
+          "type": "number"
+        },
+        "cycleId": {
+          "type": "string"
+        },
+        "countdownText": {
+          "type": "string"
+        },
+        "pointer": {
+          "type": "number"
+        },
+        "totalRotatedClicks": {
+          "type": "number"
+        },
+        "activeCount": {
+          "type": "number"
+        },
+        "featuredOffer": {
+          "type": "object"
+        },
+        "offers": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      },
+      "required": [
+        "version",
+        "updatedAt",
+        "cycleId",
+        "offers"
+      ]
+    }
+  }
+}
